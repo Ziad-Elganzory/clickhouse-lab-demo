@@ -9,6 +9,8 @@ use Illuminate\Support\Number;
 
 class OrderAnalyticsOverview extends StatsOverviewWidget
 {
+    protected static bool $isLazy = false;
+
     protected static ?int $sort = -3;
 
     protected ?string $heading = 'Order analytics (ClickHouse)';
