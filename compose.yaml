@@ -24,7 +24,6 @@ services:
         depends_on:
             - mysql
             - clickhouse
-            - rabbitmq
     mysql:
         image: 'mysql:8.4'
         ports:
@@ -85,26 +84,6 @@ services:
                 - 'wget --spider -q http://localhost:8123/ping || exit 1'
             retries: 3
             timeout: 5s
-    rabbitmq:
-        image: 'rabbitmq:4-management-alpine'
-        hostname: 'rabbitmq'
-        ports:
-            - '${FORWARD_RABBITMQ_PORT:-5672}:5672'
-            - '${FORWARD_RABBITMQ_DASHBOARD_PORT:-15672}:15672'
-        environment:
-            RABBITMQ_HOST: '%'
-            RABBITMQ_DEFAULT_USER: '${RABBITMQ_USER}'
-            RABBITMQ_DEFAULT_PASS: '${RABBITMQ_PASSWORD}'
-            RABBITMQ_VHOST: '${RABBITMQ_VHOST}'
-            RABBITMQ_QUEUE: '${RABBITMQ_QUEUE}'
-        volumes:
-            - 'sail-rabbitmq:/var/lib/rabbitmq'
-        networks:
-            - sail
-        healthcheck:
-            test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
-            retries: 3
-            timeout: 5s
 networks:
     sail:
         driver: bridge
@@ -112,6 +91,4 @@ volumes:
     sail-mysql:
         driver: local
     sail-clickhouse:
-        driver: local
-    sail-rabbitmq:
         driver: local
