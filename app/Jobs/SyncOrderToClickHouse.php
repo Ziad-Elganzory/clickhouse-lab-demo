@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Clickhouse\OrderEvent;
 use App\Models\Order;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -33,7 +34,15 @@ class SyncOrderToClickHouse implements ShouldQueue
     {
         $order = Order::query()->findOrFail($this->orderId);
 
-        DB::connection('clickhouse')->table('order_events')->insert([
+        // DB::connection('clickhouse')->table('order_events')->insert([
+        //     'order_id' => $order->id,
+        //     'customer_name' => $order->customer_name,
+        //     'amount' => $order->amount,
+        //     'status' => $order->status,
+        //     'ordered_at' => $order->created_at->format('Y-m-d H:i:s'),
+        // ]);
+
+        OrderEvent::query()->insert([
             'order_id' => $order->id,
             'customer_name' => $order->customer_name,
             'amount' => $order->amount,

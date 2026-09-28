@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Analytics\OrderAnalyticsReader;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(OrderAnalyticsReader::class, function ($app) {
+        $driver = config('analytics.driver');
+        $class = config("analytics.readers.{$driver}");
+        return $app->make($class);
+    });
     }
 
     /**
